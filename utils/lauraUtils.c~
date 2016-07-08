@@ -1,0 +1,17 @@
+include "lauraUtils.h"
+
+int totalLinesInFile(FILE * fin)
+{
+	char c;
+	int l = 0;
+	while(!feof(fin))
+	{
+		c = fgetc(fin);
+		if(c == '\n')
+		{
+			l++;
+		}
+	}
+	rewind(fin);
+	return l;
+}

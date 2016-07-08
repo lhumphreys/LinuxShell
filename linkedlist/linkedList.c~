@@ -1,0 +1,119 @@
+#include "linkedList.h"
+#include "listUtils.h"
+#include <stdbool.h>
+
+LinkedList * linkedList(){
+	LinkedList * listP = (LinkedList *)calloc(1, sizeof(LinkedList));
+	(*listP).head = (Node*)calloc(1, sizeof(Node));
+	(*(*listP).head).data = NULL;
+	(*(*listP).head).next = NULL;
+	(*(*listP).head).prev = NULL;
+	(*listP).size = 0;
+	return listP;
+}
+
+void addLast(LinkedList * theList, Node * nn){
+	Node * cur = (*theList).head;
+	while((*cur).next != NULL){
+		cur = (*cur).next;
+	}
+
+	(*cur).next = nn;
+	(*nn).prev = cur;
+	(*nn).next = NULL;
+
+	(*theList).size++;
+}
+
+void addFirst(LinkedList * theList, Node * nn){
+	Node * temp = (*(*theList).head).next;
+	(*(*theList).head).next = nn;
+	(*nn).prev = (*theList).head;
+	(*nn).next = temp;
+	(*temp).prev = nn;
+
+	(*theList).size++;
+}
+
+void removeFirst(LinkedList * theList, void (*removeData)(void*))
+{
+	Node * first = (*(*theList).head).next;
+	Node * second = (*first).next;
+	(*(*theList).head).next = second;
+	(*second).prev = (*theList).head;
+
+	removeData((*first).data);
+	(*first).next = NULL;
+	(*first).prev = NULL;
+	free(first);
+	
+	(*theList).size --;
+}
+
+void removeItem(LinkedList * theList, Node * nn, void (*removeData)(void*), int (*compare)(const void *, const void *)){
+	bool found = false;
+	Node * cur = (*(*theList).head).next;
+	while(cur != NULL){
+		if(compare((*nn).data, (*cur).data) == 0){
+			found = true;
+			break;
+		}
+		cur = (*cur).next;
+	}
+
+	if(found){
+		(*(*cur).prev).next = (*cur).next;
+		if((*cur).next != NULL){
+			(*(*cur).next).prev = (*cur).prev;
+		}
+		removeData((*cur).data);
+		free(cur);
+		cur = NULL;
+	}
+
+	removeData((*nn).data);
+	free(nn);
+	nn = NULL;
+
+	(*theList).size--;
+}
+
+void clearList(LinkedList * theList, void (*removeData)(void *)){
+	
+	if((*(*theList).head).next != NULL)	
+	{
+		Node * prev = (*(*theList).head).next;
+		Node * cur = (*prev).next;
+
+		while(cur != NULL){
+			removeData((*prev).data);
+			free(prev);
+			prev = NULL;
+			prev = cur;
+			cur = (*cur).next;	
+		}
+		removeData((*prev).data);
+		free(prev);
+		prev = NULL;
+	}
+
+	free((*theList).head);
+	(*theList).head = NULL;
+}
+
+void printList(const LinkedList * theList, void (*convertData)(void *)){
+	Node * cur = (*theList).head;
+	int i = 1;
+
+	while((*cur).next != NULL)
+	{
+		cur = (*cur).next;
+		printf("%d ", i);
+		convertData((*cur).data);
+		i++;
+	}
+	printf("List size: %d\n", (*theList).size);
+
+}
+
+

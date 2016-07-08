@@ -1,0 +1,25 @@
+#include "genericData.h"
+
+void printType(void * passedIn){
+//TODO
+}
+
+void * buildType(FILE * fin){
+//TODO
+}
+
+void * buildType_Prompt(FILE * fin){
+//TODO
+}
+
+int compare(const void * p1, const void * p2){
+//TODO
+
+return 0;
+}
+
+void cleanType(void * passedIn){
+//TODO
+}
+
+
